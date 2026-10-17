@@ -52,12 +52,25 @@ node preview-server.cjs
 
 ## 部署
 
-推送到 `main` 分支即自动发布，工作流见 `.github/workflows/deploy.yml`
+本站是 **GitHub Pages 项目站点（project site）**，不再使用用户站点根目录。
+
+| 用途 | 仓库 | 网址 |
+| --- | --- | --- |
+| **站点本体** | [`csypb123/my-intro`](https://github.com/csypb123/my-intro) | <https://csypb123.github.io/my-intro/> |
+| 旧地址跳转 | `csypb123/csypb123.github.io` | <https://csypb123.github.io/> → 自动跳转到 `/my-intro/` |
+
+推送到 `my-intro` 仓库的 `main` 分支即自动发布，工作流见 `.github/workflows/deploy.yml`
 （GitHub Actions → `actions/deploy-pages`），通常 1–3 分钟生效。
 
 > **注意**：工作流只把 `index.html`、`2048.html`、`styles.css`、`script.js`、`.nojekyll`、
 > `assets/`、`README.md` 拷进发布产物。**新增页面时必须同步修改
 > `.github/workflows/deploy.yml` 里的 `cp` 那一行**，否则线上会 404。
+
+> **站内链接必须用相对路径**（`2048.html`、`assets/x.jpg`），不能写成 `/2048.html`。
+> 因为站点挂在 `/my-intro/` 子目录下，以 `/` 开头的绝对路径会指到域名根目录而 404。
+
+> 用户站点仓库（`csypb123.github.io`）的 Pages **无法通过 API 停用**（会返回 422），
+> 所以那边只发布一个跳转页。想彻底移除，只能在 GitHub 网页端把该仓库删除或归档。
 
 > 若用 GitHub token 通过 API 修改 `.github/workflows/**`，token 必须带 `workflow` 权限
 > （`gh auth refresh -s workflow`），否则 GitHub 会返回 404。
