@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>杨鹏博 · 个人主页</title>
+<meta name="description" content="你好，我是杨鹏博，沈阳理工大学计算机科学与技术专业大一学生。正在认真打基础、不断尝试，持续更新中。">
+<meta name="author" content="杨鹏博">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Open Graph / 分享卡片 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="杨鹏博 · 个人主页">
+<meta property="og:description" content="计算机科学与技术 · 大一在读。正在学习，正在探索，持续更新中。">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/319321990?v=4">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/favicon.svg">
+<link rel="stylesheet" href="styles.css?v=20261031">
+<script>document.documentElement.className += ' js';</script>
+</head>
+<body>
+
+<!-- 开场加载动画：品牌字标 + 进度条 + 名字逐字浮现。
+     加载期间锁滚动，结束后触发页面的入场动画。 -->
+<div id="preloader" class="preloader" role="status" aria-live="polite" aria-label="正在加载">
+  <div class="preloader__inner">
+    <div class="preloader__mark">杨</div>
+    <p class="preloader__hello">PERSONAL FIELD NOTES</p>
+    <p class="preloader__name">杨鹏博</p>
+    <div class="preloader__bar"><i></i></div>
+    <p class="preloader__hint" id="plHint">正在准备页面</p>
+  </div>
+</div>
+<script>document.body.classList.add('is-locked');</script>
+
+<!-- 兜底脚本：保证加载动画一定消失。
+     放在这里是为了让 script.js 尚未加载完（或被缓存阻断）时页面已经可用。 -->
+<script>
+(function () {
+  var pl = document.getElementById('preloader');
+  var hint = document.getElementById('plHint');
+  // 至少展示这么久：太短会「闪一下」，反而像卡顿或出错
+  var MIN_MS = 820;
+  var started = (window.performance && performance.now) ? performance.now() : Date.now();
+  var closed = false;
+
+  function now() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
+
+  function dismiss() {
+    if (closed || !pl) return;
+    closed = true;
+    var left = Math.max(0, MIN_MS - (now() - started));
+    window.setTimeout(function () {
+      pl.classList.add('is-done');
+      document.body.classList.remove('is-locked');
+      // 通知页面：可以播放入场动画了
+      try {
+        window.dispatchEvent(new CustomEvent('ypb:loaded'));
+      } catch (e) {}
+      window.setTimeout(function () {
+        try { if (pl.parentNode) pl.parentNode.removeChild(pl); } catch (e) {}
+      }, 700);
+    }, left);
+  }
+
+  // 让进度条有个推进的过程；真实加载进度浏览器不对外暴露，这里按时间推进到 92%
+  var p = 0;
+  var timer = window.setInterval(function () {
+    p = Math.min(92, p + Math.random() * 18 + 6);
+    if (pl) pl.style.setProperty('--p', p + '%');
+    if (hint) hint.textContent = p < 55 ? '正在准备页面' : (p < 90 ? '正在加载插画与音乐' : '马上就好');
+    if (p >= 92) window.clearInterval(timer);
+  }, 190);
+
+  if (document.readyState === 'complete') dismiss();
+  else window.addEventListener('load', dismiss);
+
+  // 兜底：无论加载是否完成，最多 2.4 秒也要放人进去
+  window.setTimeout(dismiss, 2400);
+})();
+</script>
+
+<!-- 顶部滚动进度条 -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- 背景：白底 + 插画 + 蓝紫叠加 -->
+<div class="backdrop" aria-hidden="true">
+  <div class="backdrop__base"></div>
+  <div class="backdrop__art"></div>
+  <div class="backdrop__wash"></div>
+  <div class="backdrop__blob backdrop__blob--1"></div>
+  <div class="backdrop__blob backdrop__blob--2"></div>
+  <div class="backdrop__blob backdrop__blob--3"></div>
+  <div class="backdrop__grid"></div>
+  <div class="backdrop__noise"></div>
+</div>
+
+<!-- 背景音乐 -->
+<!-- preload=metadata：先取头部信息；整段音乐会由脚本在页面空闲时预载，点播放即可立刻出声 -->
+<audio id="bgm" src="assets/fishinthepool.mp3" loop preload="metadata"></audio>
+
+<!-- 导航 -->
+<header class="nav" id="nav">
+  <div class="nav__inner container">
+    <a class="brand" href="#home">
+      <span class="brand__mark">杨</span>
+      <span class="brand__text">杨鹏博<em>.dev</em></span>
+    </a>
+
+    <nav class="nav__links" id="navLinks" aria-label="主导航">
+      <a href="#home">首页</a>
+      <a href="#about">关于我</a>
+      <a href="#projects">项目</a>
+      <a href="#skills">技能</a>
+      <a href="#interests">兴趣</a>
+      <a href="#now">近况</a>
+      <a href="#contact">联系</a>
+      <span class="nav__pill" id="navPill" aria-hidden="true"></span>
+    </nav>
+
+    <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false" aria-label="背景音乐开关">
+      <span class="bgm-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="bgm-toggle__text">BGM</span>
+    </button>
+
+    <button class="nav__toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ 首屏 ============ -->
+  <section class="hero" id="home">
+    <div class="hero__inner">
+      <div class="hero__text" data-parallax="0.18">
+        <p class="hero__eyebrow reveal" data-delay="0">
+          <span class="dot"></span> 沈阳理工大学 · 计算机科学与技术
+        </p>
+
+        <h1 class="hero__title">
+          <span class="hero__greet reveal" data-delay="0">你好，我是</span>
+          <span class="grad-text" data-split data-delay="120">杨鹏博</span>
+        </h1>
+
+        <p class="hero__subtitle reveal" data-delay="160">
+          <span id="typed" class="typed"></span><span class="caret" aria-hidden="true"></span>
+        </p>
+
+        <p class="hero__desc reveal" data-delay="240">
+          现在的我还没有特别擅长的技术，但正处在认真打基础、不断尝试的阶段。
+          希望在接下来的学习与实践中，慢慢找到自己真正感兴趣、愿意长期投入的方向。
+        </p>
+
+        <div class="hero__actions reveal" data-delay="320">
+          <a class="btn btn--primary" href="#about">
+            <span>了解我</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn--ghost" href="2048.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor"/></svg>
+            <span>玩 2048</span>
+          </a>
+          <a class="btn btn--ghost" href="https://github.com/csypb123" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z" fill="currentColor"/></svg>
+            <span>GitHub</span>
+          </a>
+        </div>
+
+        <ul class="hero__facts reveal" data-delay="400">
+          <li>
+            <strong class="count" data-count="1" data-suffix="">0</strong>
+            <span>大一在读</span>
+          </li>
+          <li>
+            <strong class="count" data-count="6" data-suffix="+">0</strong>
+            <span>喜爱作品</span>
+          </li>
+          <li>
+            <strong class="count" data-count="100" data-suffix="%">0</strong>
+            <span>持续更新</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="hero__card reveal" data-delay="200" data-parallax="-0.1">
+        <div class="glass profile">
+          <div class="profile__avatar">
+            <div class="profile__ring"></div>
+            <img src="https://avatars.githubusercontent.com/u/319321990?v=4"
+                 alt="杨鹏博的头像" width="132" height="132" loading="eager"
+                 onerror="this.classList.add('is-fallback')">
+            <span class="profile__badge" title="在读学生">🎓</span>
+          </div>
+          <h3 class="profile__name">杨鹏博 <small>Yang Pengbo</small></h3>
+          <p class="profile__meta">浙江台州 → 辽宁沈阳</p>
+
+          <figure class="profile__pane">
+            <img src="assets/landscape.svg" alt="晨雾中的山峰、湖泊与松林" width="1000" height="1200" loading="lazy">
+            <span class="profile__pane-shade" aria-hidden="true"></span>
+            <figcaption>下一站，未知</figcaption>
+          </figure>
+
+          <div class="profile__tags">
+            <span>计算机科学与技术</span>
+            <span>大一</span>
+            <span>番剧爱好者</span>
+            <span>游戏玩家</span>
+          </div>
+          <div class="profile__status">
+            <span class="pulse"></span> 正在学习 · 正在探索
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a class="scroll-hint" href="#about" aria-label="向下滚动">
+      <span class="scroll-hint__mouse"><i></i></span>
+      <span class="scroll-hint__text">向下滚动</span>
+    </a>
+  </section>
+
+  <!-- ============ 关于我 ============ -->
+  <section class="section" id="about">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="section__index">01</span>
+        <h2 class="section__title grad-text">关于我</h2>
+        <p class="section__sub">About Me</p>
+      </header>
+
+      <div class="about">
+        <div class="glass about__card reveal" data-delay="80">
+          <p>
+            你好，我是<strong>杨鹏博</strong>，祖籍<strong>浙江台州</strong>，目前就读于
+            <strong>沈阳理工大学</strong>计算机科学与技术专业，是一名大一新生。
+          </p>
+          <p>
+            现在的我还没有特别擅长的技术，但正处在<strong>认真打基础、不断尝试</strong>的阶段。
+            我希望在接下来的学习与实践中，慢慢找到自己真正感兴趣、愿意长期投入的方向。
+          </p>
+          <p>
+            平时会看番、打游戏，也会把课上学到的东西做成能跑起来的小东西——
+            这个主页和里面的小游戏，就是最近的两次尝试。
+          </p>
+          <p class="about__quote">
+            “慢慢来，比较快。” —— 愿每一步都算数。
+          </p>
+        </div>
+
+        <div class="about__side">
+          <article class="glass info-card reveal" data-delay="140">
+            <span class="info-card__icon">📍</span>
+            <h4>家乡</h4>
+            <p>浙江 · 台州</p>
+          </article>
+          <article class="glass info-card reveal" data-delay="200">
+            <span class="info-card__icon">🏫</span>
+            <h4>学校</h4>
+            <p>沈阳理工大学</p>
+          </article>
+          <article class="glass info-card reveal" data-delay="260">
+            <span class="info-card__icon">💻</span>
+            <h4>专业</h4>
+            <p>计算机科学与技术</p>
+          </article>
+          <article class="glass info-card reveal" data-delay="320">
+            <span class="info-card__icon">🌱</span>
+            <h4>阶段</h4>
+            <p>大一 · 打基础</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline__line" aria-hidden="true"><i id="timelineFill"></i></div>
+        <ol class="timeline__list">
+          <li class="timeline__item reveal" data-delay="80">
+            <span class="timeline__dot"></span>
+            <h4>从浙江台州出发</h4>
+            <p>在南方小城长大，喜欢安静的夜晚和屏幕里的故事。</p>
+          </li>
+          <li class="timeline__item reveal" data-delay="160">
+            <span class="timeline__dot"></span>
+            <h4>考入沈阳理工大学</h4>
+            <p>跨越两千多公里，来到沈阳，开启计算机科学与技术的学习。</p>
+          </li>
+          <li class="timeline__item reveal" data-delay="240">
+            <span class="timeline__dot"></span>
+            <h4>认真打基础 · 现在</h4>
+            <p>学编程基础，尝试各种小项目，记录自己的成长轨迹。</p>
+          </li>
+          <li class="timeline__item timeline__item--next reveal" data-delay="320">
+            <span class="timeline__dot"></span>
+            <h4>寻找长期方向</h4>
+            <p>希望找到真正感兴趣、愿意长期投入的方向。 —— 持续更新中</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 项目 ============ -->
+  <section class="section" id="projects">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="section__index">02</span>
+        <h2 class="section__title grad-text">项目</h2>
+        <p class="section__sub">Projects</p>
+      </header>
+
+      <p class="section__lead reveal" data-delay="80">
+        数量不多，都是自己动手写出来、能真的跑起来的东西。
+      </p>
+
+      <div class="projects">
+        <article class="glass project reveal" data-delay="60">
+          <div class="project__top">
+            <span class="project__icon" aria-hidden="true">⊞</span>
+            <span class="project__tag">可在线试玩</span>
+          </div>
+          <h3>2048 · 数字合并</h3>
+          <p class="project__en">2048</p>
+          <p class="project__desc">
+            经典的数字合并玩法：方向键或滑动屏幕，把相同数字并成更大的数字，目标是拼出 2048。
+            带撤销、最高分记录与合并动画，纯手写、零依赖，手机上直接滑动就能玩。
+          </p>
+          <div class="project__meta">
+            <span>原生 JS</span><span>键盘 + 触控</span><span>零依赖</span>
+          </div>
+          <a class="project__link" href="2048.html">马上玩一局 <i aria-hidden="true">↗</i></a>
+        </article>
+
+        <article class="glass project reveal" data-delay="120">
+          <div class="project__top">
+            <span class="project__icon" aria-hidden="true">✎</span>
+            <span class="project__tag">本站</span>
+          </div>
+          <h3>个人主页</h3>
+          <p class="project__en">Personal Homepage</p>
+          <p class="project__desc">
+            就是你正在看的这一页：纯 HTML / CSS / JS 手写，没有框架、没有构建工具。
+            滚动动画只用 transform 与 opacity，由 IntersectionObserver 与 requestAnimationFrame 驱动；
+            推到 main 分支后由 GitHub Actions 自动发布到 GitHub Pages。
+          </p>
+          <div class="project__meta">
+            <span>HTML / CSS / JS</span><span>GitHub Actions</span><span>GitHub Pages</span>
+          </div>
+          <a class="project__link" href="https://github.com/csypb123/my-intro" target="_blank" rel="noopener">查看源码 <i aria-hidden="true">↗</i></a>
+        </article>
+
+        <article class="glass project reveal" data-delay="240">
+          <div class="project__top">
+            <span class="project__icon" aria-hidden="true">⌘</span>
+            <span class="project__tag">练习中</span>
+          </div>
+          <h3>课程练习与小工具</h3>
+          <p class="project__en">Practice</p>
+          <p class="project__desc">
+            跟着课程写的 C 语言练习、几段小脚本，用来把课上的概念自己动手实现一遍。
+            还没整理成型，先从把基础打稳开始。
+          </p>
+          <div class="project__meta">
+            <span>C 语言</span><span>基础练习</span><span>整理中</span>
+          </div>
+          <a class="project__link" href="https://github.com/csypb123?tab=repositories" target="_blank" rel="noopener">去 GitHub 看看 <i aria-hidden="true">↗</i></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 技能 ============ -->
+  <section class="section" id="skills">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="section__index">03</span>
+        <h2 class="section__title grad-text">技能</h2>
+        <p class="section__sub">Skills</p>
+      </header>
+
+      <p class="section__lead reveal" data-delay="80">
+        如实标注当前水平，不虚报——进度条代表现在的熟练度，不代表上限。
+      </p>
+
+      <div class="skills">
+        <div class="glass skills__main reveal" data-delay="80">
+          <div class="skill">
+            <div class="skill__top">
+              <span class="skill__name">C 语言基础</span>
+              <span class="skill__level">在学 · 入门</span>
+            </div>
+            <span class="skill__track"><i style="--w:42%"></i></span>
+          </div>
+          <div class="skill">
+            <div class="skill__top">
+              <span class="skill__name">HTML / CSS</span>
+              <span class="skill__level">会用 · 够用</span>
+            </div>
+            <span class="skill__track"><i style="--w:62%"></i></span>
+          </div>
+          <div class="skill">
+            <div class="skill__top">
+              <span class="skill__name">JavaScript</span>
+              <span class="skill__level">会用 · 在进步</span>
+            </div>
+            <span class="skill__track"><i style="--w:50%"></i></span>
+          </div>
+          <div class="skill">
+            <div class="skill__top">
+              <span class="skill__name">Git / GitHub</span>
+              <span class="skill__level">会用 · 日常在用</span>
+            </div>
+            <span class="skill__track"><i style="--w:45%"></i></span>
+          </div>
+          <p class="skills__note">
+            这里没有可以吹的东西，只有正在长的那部分。会一项就写一项。
+          </p>
+        </div>
+
+        <div class="glass tools reveal" data-delay="160">
+          <h4>常用环境</h4>
+          <ul>
+            <li><span>VS Code</span><em>编辑器</em></li>
+            <li><span>Git / GitHub</span><em>版本管理</em></li>
+            <li><span>GitHub Actions</span><em>自动部署</em></li>
+            <li><span>Chrome DevTools</span><em>调试</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 兴趣 ============ -->
+  <section class="section" id="interests">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="section__index">04</span>
+        <h2 class="section__title grad-text">兴趣</h2>
+        <p class="section__sub">Interests</p>
+      </header>
+
+      <p class="section__lead reveal" data-delay="80">
+        这些作品是我放松的方式，也常常给我带来灵感和想象力。
+      </p>
+
+      <div class="interest">
+        <div class="interest__col">
+          <h3 class="interest__label reveal">📺 番剧</h3>
+          <div class="cards">
+            <article class="glass card reveal" data-delay="80" data-tilt>
+              <div class="card__glow" style="--c1:#6d4dfa; --c2:#c026d3"></div>
+              <h4>孤独摇滚！</h4>
+              <p class="card__en">BOCCHI THE ROCK!</p>
+              <p class="card__desc">社恐少女的一把吉他，把「不擅长」也弹成了热爱。</p>
+              <span class="card__tag">音乐 · 青春</span>
+            </article>
+
+            <article class="glass card reveal" data-delay="160" data-tilt>
+              <div class="card__glow" style="--c1:#3b82f6; --c2:#6d4dfa"></div>
+              <h4>魔女之旅</h4>
+              <p class="card__en">Wandering Witch</p>
+              <p class="card__desc">灰之魔女走过许多国家，我看见的是「世界的多样性」。</p>
+              <span class="card__tag">奇幻 · 旅行</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="interest__col">
+          <h3 class="interest__label reveal">🎮 游戏</h3>
+          <div class="cards">
+            <article class="glass card reveal" data-delay="80" data-tilt>
+              <div class="card__glow" style="--c1:#6d4dfa; --c2:#3b82f6"></div>
+              <h4>崩坏 3</h4>
+              <p class="card__en">Honkai Impact 3rd</p>
+              <p class="card__desc">为世界上所有的美好而战，也是我最早学会「坚持」的地方。</p>
+              <span class="card__tag">动作 · 剧情</span>
+            </article>
+
+            <article class="glass card reveal" data-delay="160" data-tilt>
+              <div class="card__glow" style="--c1:#0ea5e9; --c2:#6d4dfa"></div>
+              <h4>崩坏：星穹铁道</h4>
+              <p class="card__en">Honkai: Star Rail</p>
+              <p class="card__desc">坐上星穹列车，一站一站地看宇宙，也一站一站地看故事。</p>
+              <span class="card__tag">回合制 · 银河</span>
+            </article>
+
+            <article class="glass card reveal" data-delay="240" data-tilt>
+              <div class="card__glow" style="--c1:#c026d3; --c2:#6d4dfa"></div>
+              <h4>Undertale</h4>
+              <p class="card__en">UNDERTALE</p>
+              <p class="card__desc">「你可以不战斗。」——它让我第一次认真思考游戏里的选择。</p>
+              <span class="card__tag">像素 · 叙事</span>
+            </article>
+
+            <article class="glass card reveal" data-delay="320" data-tilt>
+              <div class="card__glow" style="--c1:#5eead4; --c2:#3b82f6"></div>
+              <h4>精灵与萤火意志</h4>
+              <p class="card__en">Ori and the Will of the Wisps</p>
+              <p class="card__desc">手绘的森林、钢琴的旋律，美到会让人停下来只想看着光。</p>
+              <span class="card__tag">平台跳跃 · 美术</span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 近况 + 音乐 ============ -->
+  <section class="section" id="now">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="section__index">05</span>
+        <h2 class="section__title grad-text">近况</h2>
+        <p class="section__sub">Now</p>
+      </header>
+
+      <div class="now">
+        <div class="glass now__main reveal" data-delay="80">
+          <h3>正在学习，正在探索，持续更新中。</h3>
+          <p>
+            大学第一年，我把大部分时间花在打基础和尝试上：学编程、做点小东西、
+            看看别人怎么把想法变成作品。也欢迎同好交流。
+          </p>
+          <div class="now__bars">
+            <div class="bar reveal" data-delay="120">
+              <span class="bar__label">学习编程基础</span><span class="bar__track"><i style="--w:68%"></i></span>
+            </div>
+            <div class="bar reveal" data-delay="180">
+              <span class="bar__label">尝试小项目</span><span class="bar__track"><i style="--w:52%"></i></span>
+            </div>
+            <div class="bar reveal" data-delay="240">
+              <span class="bar__label">寻找长期方向</span><span class="bar__track"><i style="--w:38%"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="now__list">
+          <article class="glass tick reveal" data-delay="120">
+            <span class="tick__icon">📚</span>
+            <div><h4>在学习</h4><p>C 语言与计算机基础，慢慢把地基打稳。</p></div>
+          </article>
+          <article class="glass tick reveal" data-delay="180">
+            <span class="tick__icon">🧪</span>
+            <div><h4>在尝试</h4><p>各种小练习和小项目，先做出来，再做好。</p></div>
+          </article>
+          <article class="glass tick reveal" data-delay="240">
+            <span class="tick__icon">✨</span>
+            <div><h4>在记录</h4><p>把这个主页当成自己的第一个长期项目。</p></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- 背景音乐 -->
+      <div class="glass bgm reveal js-only" id="bgmCard" data-delay="120">
+        <div class="bgm__head">
+          <div class="bgm__disc" aria-hidden="true"></div>
+          <div class="bgm__info">
+            <h4>背景音乐 · fishinthepool</h4>
+            <p>看页面时循环播放的一段 BGM，也是这个页面的氛围来源。</p>
+          </div>
+        </div>
+
+        <canvas class="bgm__wave" id="bgmWave" width="900" height="144" aria-hidden="true"></canvas>
+
+        <div class="bgm__controls">
+          <button class="bgm__btn bgm__btn--main" id="bgmPlay" type="button">▶ 播放</button>
+          <button class="bgm__btn" id="bgmMute" type="button">🔇 静音</button>
+          <button class="bgm__btn" id="bgmRestart" type="button">↻ 重新开始</button>
+        </div>
+
+        <label class="bgm__vol">
+          <span>音量</span>
+          <input type="range" id="bgmVol" min="5" max="100" value="45" aria-label="音量">
+          <span id="bgmVolText" class="mono">45%</span>
+        </label>
+
+        <p class="bgm__tip" id="bgmTip">
+          进页面会尽量自动播放：浏览器允许就直接出声。不允许时会先静音播放，
+          你<b>滚动页面</b>就会尝试放出来（部分浏览器允许）；若仍是静音，
+          按<b>点击页面任意处</b>或<b>按一下键盘</b>即可出声——这是浏览器唯一认可的方式。
+          右上角的 BGM 按钮随时可以开关。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 关于本站 ============ -->
+  <section class="section" id="site">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="section__index">06</span>
+        <h2 class="section__title grad-text">关于本站</h2>
+        <p class="section__sub">This Site</p>
+      </header>
+
+      <p class="section__lead reveal" data-delay="80">
+        这个网站本身也是我的练习之一，所以顺便把做法写在这里。
+      </p>
+
+      <div class="sitelist">
+        <article class="glass sitecard reveal" data-delay="80">
+          <h4>手写，不用框架</h4>
+          <p>纯 HTML / CSS / JavaScript，没有框架、没有构建工具、没有 CDN，
+            资源都在仓库里，克隆下来双击就能看。</p>
+        </article>
+        <article class="glass sitecard reveal" data-delay="140">
+          <h4>动画只用 transform 与 opacity</h4>
+          <p>滚动入场交给 IntersectionObserver，视差与进度条交给 requestAnimationFrame 节流，
+            不触发重排，所以在手机上也不卡。</p>
+        </article>
+        <article class="glass sitecard reveal" data-delay="200">
+          <h4>背景不用 fixed 附件</h4>
+          <p>插画与暖色叠加放在固定定位的图层里，而不是 background-attachment: fixed——
+            后者在移动端容易掉帧。</p>
+        </article>
+        <article class="glass sitecard reveal" data-delay="260">
+          <h4>推上去就自动发布</h4>
+          <p>推到 main 分支后，GitHub Actions 会把静态文件打包并发布到 GitHub Pages，
+            通常一两分钟生效。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 联系 ============ -->
+  <section class="section section--contact" id="contact">
+    <div class="container">
+      <div class="glass contact reveal">
+        <p class="contact__eyebrow">很高兴认识你</p>
+        <h2 class="grad-text">也欢迎同好交流</h2>
+        <p class="contact__desc">无论是番剧、游戏，还是学习路上的问题，都可以来找我聊聊。</p>
+
+        <ul class="contact__list">
+          <li class="contact__item">
+            <span class="contact__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3c4.97 0 9 3.36 9 7.5 0 2.35-1.3 4.44-3.33 5.82l.83 2.68-3.02-1.5A11 11 0 0 1 12 18c-4.97 0-9-3.36-9-7.5S7.03 3 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="contact__meta">
+              <span class="contact__label">QQ</span>
+              <span class="contact__value" data-copy="2968564924">2968564924</span>
+            </span>
+            <button class="contact__copy" type="button" data-copy="2968564924" aria-label="复制 QQ 号">复制</button>
+          </li>
+
+          <li class="contact__item">
+            <span class="contact__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.6 10.2h1.9v4.6H7.6zM7.5 8.6a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM11.4 10.2h1.8v.66c.3-.45.86-.78 1.56-.78 1.2 0 1.94.76 1.94 2.1v2.62h-1.88v-2.36c0-.6-.28-.94-.8-.94-.55 0-.9.4-.9 1.03v2.27h-1.72z" fill="currentColor"/></svg>
+            </span>
+            <span class="contact__meta">
+              <span class="contact__label">哔哩哔哩 UID</span>
+              <a class="contact__value contact__value--link" href="https://space.bilibili.com/2071318857" target="_blank" rel="noopener" data-copy="2071318857">2071318857</a>
+            </span>
+            <button class="contact__copy" type="button" data-copy="2071318857" aria-label="复制 B 站 UID">复制</button>
+          </li>
+
+          <li class="contact__item">
+            <span class="contact__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.8 6.6 12 12.6l8.2-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="contact__meta">
+              <span class="contact__label">邮箱</span>
+              <a class="contact__value contact__value--link" href="mailto:2968564924@qq.com" data-copy="2968564924@qq.com">2968564924@qq.com</a>
+            </span>
+            <button class="contact__copy" type="button" data-copy="2968564924@qq.com" aria-label="复制邮箱地址">复制</button>
+          </li>
+
+        </ul>
+
+        <div class="contact__actions">
+          <a class="btn btn--primary" href="https://github.com/csypb123" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z" fill="currentColor"/></svg>
+            <span>github.com/csypb123</span>
+          </a>
+          <a class="btn btn--ghost" href="#home">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>回到顶部</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© <span id="year">2025</span> 杨鹏博 · 用 HTML / CSS / JS 手写</p>
+    <p class="footer__hint">沈阳理工大学 · 计算机科学与技术</p>
+  </div>
+</footer>
+
+<!-- 回到顶部 -->
+<button class="to-top" id="toTop" aria-label="回到顶部">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<script src="script.js?v=20261031"></script>
+</body>
+</html>

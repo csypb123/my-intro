@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1200" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="500" y1="0" x2="500" y2="850" gradientUnits="userSpaceOnUse"><stop stop-color="#a4bbae"/><stop offset=".53" stop-color="#dedfbd"/><stop offset="1" stop-color="#bcc8ac"/></linearGradient>
+    <linearGradient id="lake" x1="500" y1="640" x2="500" y2="1200" gradientUnits="userSpaceOnUse"><stop stop-color="#b9ccba"/><stop offset=".5" stop-color="#6e9886"/><stop offset="1" stop-color="#416d60"/></linearGradient>
+    <linearGradient id="near" x1="0" y1="700" x2="900" y2="1200" gradientUnits="userSpaceOnUse"><stop stop-color="#416e5a"/><stop offset="1" stop-color="#264c41"/></linearGradient>
+    <radialGradient id="sunGlow"><stop stop-color="#f5ebbc" stop-opacity=".8"/><stop offset="1" stop-color="#f5ebbc" stop-opacity="0"/></radialGradient>
+    <linearGradient id="mist"><stop stop-color="#e7e7cc" stop-opacity="0"/><stop offset=".5" stop-color="#e7e7cc" stop-opacity=".65"/><stop offset="1" stop-color="#e7e7cc" stop-opacity="0"/></linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".075"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+    <g id="pine"><path d="m0 0-13 35h7l-17 31h9l-22 35h31v25h10v-25h31L14 66h9L6 35h7Z" fill="currentColor"/></g>
+  </defs>
+  <g filter="url(#grain)"><path fill="url(#sky)" d="M0 0h1000v1200H0z"/><circle cx="650" cy="295" r="245" fill="url(#sunGlow)"/><circle cx="650" cy="295" r="65" fill="#f3e8b8"/>
+  <path d="M0 570 88 468l51 32 118-127 110 97 122-182 69 101 67-54 111 130 83-89 66 90 115-112v366H0Z" fill="#a3b59d"/>
+  <path d="m365 470 123-182 69 101-50-21-17-44-35 58-23-8-33 79Z" fill="#d5dbbb" opacity=".7"/>
+  <path d="M0 650 68 573l128 42 99-115 54 68 97-82 148 159 128-115 67 31 91-96 120 73v322H0Z" fill="#829f87"/>
+  <path d="m446 486 148 159-92-57-31-51-45 19Z" fill="#b7c9a5" opacity=".55"/>
+  <path d="M0 697c133-15 176 59 314 28s242-38 363-12 202-49 323-23v510H0Z" fill="url(#lake)"/>
+  <path d="M0 677c203 58 232 51 353 29 203-35 329-9 647-36" stroke="url(#mist)" stroke-width="50"/>
+  <path d="M0 580c98 24 183 94 214 156 13 27 84 22 164 47 36 12 10 35-82 42C150 838 79 876 0 886Z" fill="#527b63"/>
+  <path d="M1000 635c-152 11-199 78-225 110-22 28-133 21-108 39 29 21 175 9 227 37l106 35Z" fill="#5e8267"/>
+  <g color="#426d55"><use href="#pine" transform="translate(28 511) scale(1.7)"/><use href="#pine" transform="translate(83 551) scale(1.3)"/><use href="#pine" transform="translate(133 598) scale(.9)"/><use href="#pine" transform="translate(178 638) scale(.7)"/><use href="#pine" transform="translate(971 553) scale(1.5)"/><use href="#pine" transform="translate(918 603) scale(1.1)"/><use href="#pine" transform="translate(874 639) scale(.8)"/><use href="#pine" transform="translate(830 673) scale(.6)"/></g>
+  <g stroke="#d8e2c5" stroke-linecap="round" opacity=".3"><path d="M454 780h134M370 819h101M582 843h178M434 881h110M565 922h131M216 965h186M400 1014h91"/><path d="M565 748h59M626 765h78M605 793h49M521 821h34" stroke-width="2"/></g>
+  <path d="M0 997c103-17 149-62 216-53s93 42 177 49c35 3 116 24 71 40-56 19-114 40-153 75-46 40-60 77-57 92H0Z" fill="url(#near)"/>
+  <path d="M1000 910c-77-8-131 42-161 97s-136 56-209 91c-77 37-110 48-151 102h521Z" fill="#355b48"/>
+  <g color="#2c5544"><use href="#pine" transform="translate(35 779) scale(2.4)"/><use href="#pine" transform="translate(128 867) scale(1.75)"/><use href="#pine" transform="translate(207 938) scale(1.1)"/><use href="#pine" transform="translate(986 680) scale(3.2)"/><use href="#pine" transform="translate(889 846) scale(2.5)"/><use href="#pine" transform="translate(810 957) scale(1.7)"/><use href="#pine" transform="translate(742 1025) scale(1.4)"/></g>
+  <g stroke="#526e59" stroke-width="2" stroke-linecap="round" opacity=".7"><path d="m274 281 12-7 13 7M317 262l9-5 10 5M241 265l6-4 8 4"/></g>
+  </g>
+</svg>
